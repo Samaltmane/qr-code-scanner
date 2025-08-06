@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced QR Code Scanner</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>QR Code Scanner</h1>
+
+    <div class="theme-toggle">
+      <label>
+        <input type="checkbox" id="themeSwitch">
+        <span>🌙 Dark Mode</span>
+      </label>
+    </div>
+
+    <div id="reader"></div>
+
+    <div class="controls">
+      <button id="startScanBtn">📷 Start Camera</button>
+      <button id="stopScanBtn" disabled>✋ Stop</button>
+      <select id="cameraSelect"></select>
+    </div>
+
+    <div class="upload-section">
+      <p>Or scan from an image:</p>
+      <input type="file" accept="image/*" id="imageFile" />
+    </div>
+
+    <div class="result" id="scanResult" style="display:none;">
+      <h3>Scanned Content:</h3>
+      <p id="resultText"></p>
+      <div class="actions">
+        <button id="copyBtn">📋 Copy</button>
+        <button id="shareBtn">🔗 Share</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
