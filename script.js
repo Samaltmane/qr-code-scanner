@@ -41,7 +41,26 @@ function onScanSuccess(decodedText) {
   stopCamera();
 }
 
-function startCamera() {
+// ✅ Request camera permission explicitly before starting scanner
+async function requestCameraAccess() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    // Stop all tracks immediately, we only want to request permission here
+    stream.getTracks().forEach(track => track.stop());
+    return true;
+  } catch (err) {
+    alert("Camera permission denied or not available.");
+    return false;
+  }
+}
+
+// Updated startCamera with permission request
+async function startCamera() {
+  const permissionGranted = await requestCameraAccess();
+  if (!permissionGranted) {
+    return; // Stop if no permission
+  }
+
   Html5Qrcode.getCameras().then(devices => {
     if (devices && devices.length) {
       currentCameraId = cameraSelect.value || devices[0].id;
@@ -106,4 +125,3 @@ imageFile.addEventListener("change", e => {
 
 // Init
 populateCameraOptions();
-
