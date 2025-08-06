@@ -1,0 +1,66 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark {
+  background: #111;
+  color: #f4f4f4;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 1rem;
+}
+
+#reader {
+  width: 100%;
+  margin: auto;
+}
+
+.controls {
+  margin-top: 1rem;
+}
+
+.controls button, .actions button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+select {
+  padding: 5px;
+}
+
+.upload-section {
+  margin-top: 1.5rem;
+}
+
+.result {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.theme-toggle {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 600px) {
+  #reader {
+    width: 100%;
+  }
+}
