@@ -15,11 +15,29 @@ themeSwitch.addEventListener("change", () => {
   document.body.classList.toggle("dark", themeSwitch.checked);
 });
 
+// ✅ URL validation helper
+function isValidUrl(string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+// ✅ Modified scan success function
 function onScanSuccess(decodedText) {
+  console.log("Scanned:", decodedText);
   resultText.textContent = decodedText;
   scanResult.style.display = "block";
   navigator.vibrate?.(200);
   new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3").play();
+
+  // Auto-open URLs in new tab
+  if (isValidUrl(decodedText)) {
+    window.open(decodedText, "_blank");
+  }
+
   stopCamera();
 }
 
@@ -63,6 +81,7 @@ function populateCameraOptions() {
 
 startScanBtn.addEventListener("click", startCamera);
 stopScanBtn.addEventListener("click", stopCamera);
+
 copyBtn.addEventListener("click", () => {
   navigator.clipboard.writeText(resultText.textContent);
   alert("Copied to clipboard");
@@ -87,3 +106,4 @@ imageFile.addEventListener("change", e => {
 
 // Init
 populateCameraOptions();
+
