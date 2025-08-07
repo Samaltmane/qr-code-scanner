@@ -3,36 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Advanced QR Code Scanner</title>
+  <title>QR Code Scanner</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
   <div class="container">
-    <h1>QR Code Scanner</h1>
-
-    <div class="theme-toggle">
-      <label>
+    <header>
+      <h1>📷 QR Code Scanner</h1>
+      <label class="theme-switch">
         <input type="checkbox" id="themeSwitch">
-        <span>🌙 Dark Mode</span>
+        <span class="slider">🌙</span>
       </label>
-    </div>
+    </header>
 
-    <div id="reader"></div>
+    <div id="reader" class="qr-reader"></div>
 
     <div class="controls">
-      <button id="startScanBtn">📷 Start Camera</button>
-      <button id="stopScanBtn" disabled>✋ Stop</button>
+      <button id="startScanBtn">▶️ Start Camera</button>
+      <button id="stopScanBtn" disabled>⏹ Stop</button>
       <select id="cameraSelect"></select>
     </div>
 
     <div class="upload-section">
-      <p>Or scan from an image:</p>
+      <p>📂 Or scan from an image:</p>
       <input type="file" accept="image/*" id="imageFile" />
     </div>
 
     <div class="result" id="scanResult" style="display:none;">
-      <h3>Scanned Content:</h3>
+      <h3>✅ Scanned Content:</h3>
       <p id="resultText"></p>
       <div class="actions">
         <button id="copyBtn">📋 Copy</button>
