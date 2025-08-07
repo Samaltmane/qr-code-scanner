@@ -1,4 +1,5 @@
 const reader = new Html5Qrcode("reader");
+
 const scanResult = document.getElementById("scanResult");
 const resultText = document.getElementById("resultText");
 const copyBtn = document.getElementById("copyBtn");
@@ -11,21 +12,22 @@ const cameraSelect = document.getElementById("cameraSelect");
 
 let currentCameraId = null;
 
+// 🌗 Toggle theme
 themeSwitch.addEventListener("change", () => {
   document.body.classList.toggle("dark", themeSwitch.checked);
 });
 
-// ✅ URL validation helper
+// ✅ URL check
 function isValidUrl(string) {
   try {
     new URL(string);
     return true;
-  } catch (_) {
+  } catch {
     return false;
   }
 }
 
-// ✅ Modified scan success function
+// ✅ Scan result handler
 function onScanSuccess(decodedText) {
   console.log("Scanned:", decodedText);
   resultText.textContent = decodedText;
@@ -33,7 +35,6 @@ function onScanSuccess(decodedText) {
   navigator.vibrate?.(200);
   new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3").play();
 
-  // Auto-open URLs in new tab
   if (isValidUrl(decodedText)) {
     window.open(decodedText, "_blank");
   }
@@ -41,37 +42,26 @@ function onScanSuccess(decodedText) {
   stopCamera();
 }
 
-// ✅ Request camera permission explicitly before starting scanner
+// 🎥 Start scanner
 async function requestCameraAccess() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    // Stop all tracks immediately, we only want to request permission here
     stream.getTracks().forEach(track => track.stop());
     return true;
-  } catch (err) {
-    alert("Camera permission denied or not available.");
+  } catch {
+    alert("Camera permission denied.");
     return false;
   }
 }
 
-// Updated startCamera with permission request
 async function startCamera() {
-  const permissionGranted = await requestCameraAccess();
-  if (!permissionGranted) {
-    return; // Stop if no permission
-  }
+  const granted = await requestCameraAccess();
+  if (!granted) return;
 
   Html5Qrcode.getCameras().then(devices => {
     if (devices && devices.length) {
       currentCameraId = cameraSelect.value || devices[0].id;
-      reader.start(
-        currentCameraId,
-        {
-          fps: 10,
-          qrbox: 250
-        },
-        onScanSuccess
-      ).then(() => {
+      reader.start(currentCameraId, { fps: 10, qrbox: 250 }, onScanSuccess).then(() => {
         startScanBtn.disabled = true;
         stopScanBtn.disabled = false;
       });
@@ -98,14 +88,13 @@ function populateCameraOptions() {
   });
 }
 
-startScanBtn.addEventListener("click", startCamera);
-stopScanBtn.addEventListener("click", stopCamera);
-
+// 📋 Copy result
 copyBtn.addEventListener("click", () => {
   navigator.clipboard.writeText(resultText.textContent);
-  alert("Copied to clipboard");
+  alert("Copied to clipboard!");
 });
 
+// 🔗 Share result
 shareBtn.addEventListener("click", () => {
   if (navigator.share) {
     navigator.share({ text: resultText.textContent });
@@ -114,14 +103,16 @@ shareBtn.addEventListener("click", () => {
   }
 });
 
+// 🖼 Scan from image
 imageFile.addEventListener("change", e => {
-  if (e.target.files.length === 0) return;
-
+  if (!e.target.files.length) return;
   const file = e.target.files[0];
   reader.scanFile(file, true)
     .then(result => onScanSuccess(result))
-    .catch(err => alert("Failed to scan image."));
+    .catch(() => alert("Failed to scan image."));
 });
 
-// Init
+// 🎬 Init
+startScanBtn.addEventListener("click", startCamera);
+stopScanBtn.addEventListener("click", stopCamera);
 populateCameraOptions();
