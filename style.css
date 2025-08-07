@@ -1,9 +1,14 @@
+/* ===== Base Styling ===== */
 body {
   font-family: 'Segoe UI', sans-serif;
   background: #f9f9f9;
   color: #333;
   margin: 0;
   padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
@@ -12,13 +17,16 @@ body.dark {
   color: #eee;
 }
 
+/* ===== Container Styling ===== */
 .container {
   max-width: 600px;
-  margin: 0 auto;
+  width: 100%;
   padding: 2rem;
   text-align: center;
+  box-sizing: border-box;
 }
 
+/* ===== Header ===== */
 header {
   display: flex;
   justify-content: space-between;
@@ -31,6 +39,7 @@ h1 {
   margin: 0;
 }
 
+/* ===== Theme Switch ===== */
 .theme-switch {
   cursor: pointer;
 }
@@ -43,12 +52,14 @@ h1 {
   font-size: 1.4rem;
 }
 
+/* ===== QR Reader Styling ===== */
 .qr-reader {
   width: 100%;
   max-width: 500px;
   margin: auto;
 }
 
+/* ===== Controls and Actions ===== */
 .controls, .actions {
   margin-top: 1.2rem;
 }
@@ -75,6 +86,7 @@ select, input[type="file"] {
   border-radius: 4px;
 }
 
+/* ===== Upload and Result Sections ===== */
 .upload-section {
   margin-top: 2rem;
 }
@@ -91,9 +103,17 @@ body.dark .result {
   background: #2c2c2c;
 }
 
+/* ===== Responsive Fixes for Small Screens ===== */
 @media (max-width: 600px) {
   .container {
     padding: 1rem;
+  }
+}
+
+@media (max-height: 600px) {
+  body {
+    align-items: flex-start;
+    padding-top: 1rem;
   }
 }
 
