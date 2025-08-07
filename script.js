@@ -42,7 +42,7 @@ function onScanSuccess(decodedText) {
   stopCamera();
 }
 
-// 🎥 Start scanner
+// 🎥 Request permission
 async function requestCameraAccess() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -54,13 +54,17 @@ async function requestCameraAccess() {
   }
 }
 
+// ✅ Start scanner and prioritize back camera
 async function startCamera() {
   const granted = await requestCameraAccess();
   if (!granted) return;
 
   Html5Qrcode.getCameras().then(devices => {
     if (devices && devices.length) {
-      currentCameraId = cameraSelect.value || devices[0].id;
+      // Try to find back camera first
+      const backCam = devices.find(device => /back|rear/i.test(device.label));
+      currentCameraId = cameraSelect.value || (backCam ? backCam.id : devices[0].id);
+
       reader.start(currentCameraId, { fps: 10, qrbox: 250 }, onScanSuccess).then(() => {
         startScanBtn.disabled = true;
         stopScanBtn.disabled = false;
@@ -76,6 +80,7 @@ function stopCamera() {
   });
 }
 
+// 📸 Populate camera list
 function populateCameraOptions() {
   Html5Qrcode.getCameras().then(devices => {
     cameraSelect.innerHTML = "";
@@ -116,3 +121,4 @@ imageFile.addEventListener("change", e => {
 startScanBtn.addEventListener("click", startCamera);
 stopScanBtn.addEventListener("click", stopCamera);
 populateCameraOptions();
+
