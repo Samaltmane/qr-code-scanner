@@ -54,25 +54,19 @@ async function requestCameraAccess() {
   }
 }
 
-// ✅ Start scanner and prioritize back camera
+// ✅ Start scanner using selected camera
 async function startCamera() {
   const granted = await requestCameraAccess();
   if (!granted) return;
 
-  Html5Qrcode.getCameras().then(devices => {
-    if (devices && devices.length) {
-      // Try to find back camera first
-      const backCam = devices.find(device => /back|rear/i.test(device.label));
-      currentCameraId = cameraSelect.value || (backCam ? backCam.id : devices[0].id);
-
-      reader.start(currentCameraId, { fps: 10, qrbox: 250 }, onScanSuccess).then(() => {
-        startScanBtn.disabled = true;
-        stopScanBtn.disabled = false;
-      });
-    }
+  currentCameraId = cameraSelect.value;
+  reader.start(currentCameraId, { fps: 10, qrbox: 250 }, onScanSuccess).then(() => {
+    startScanBtn.disabled = true;
+    stopScanBtn.disabled = false;
   });
 }
 
+// ⛔️ Stop scanner
 function stopCamera() {
   reader.stop().then(() => {
     startScanBtn.disabled = false;
@@ -80,16 +74,26 @@ function stopCamera() {
   });
 }
 
-// 📸 Populate camera list
+// 📸 Populate camera list and auto-select back camera
 function populateCameraOptions() {
   Html5Qrcode.getCameras().then(devices => {
     cameraSelect.innerHTML = "";
-    devices.forEach(cam => {
+    let backCamIndex = 0;
+
+    devices.forEach((cam, index) => {
       const option = document.createElement("option");
       option.value = cam.id;
-      option.text = cam.label || `Camera ${cameraSelect.length + 1}`;
+      option.text = cam.label || `Camera ${index + 1}`;
       cameraSelect.appendChild(option);
+
+      // Match back camera label
+      if (/back|rear/i.test(cam.label)) {
+        backCamIndex = index;
+      }
     });
+
+    // Auto-select back camera if found
+    cameraSelect.selectedIndex = backCamIndex;
   });
 }
 
@@ -121,4 +125,3 @@ imageFile.addEventListener("change", e => {
 startScanBtn.addEventListener("click", startCamera);
 stopScanBtn.addEventListener("click", stopCamera);
 populateCameraOptions();
-
